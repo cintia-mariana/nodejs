@@ -15,6 +15,8 @@ setTimeout( () =>{
 
 },0);
 
+console.log('test');
+
 
 
 
