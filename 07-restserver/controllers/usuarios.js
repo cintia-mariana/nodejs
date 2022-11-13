@@ -69,21 +69,19 @@ const usuariosGet= async (req=request, res= response) => {
       const { id } = req.params;
      
 
-        //fisicamente lo borramos 
-        //const usuario = await Usuario.findByIdAndDelete( id );
+       
 
         const usuario= await Usuario.findByIdAndUpdate(id,{ estado: false});
-        const usuarioAutenticado= req.usuario
+   
 
-
-        res.json({ usuario,uid });
+        res.json({ usuario});
       
         }
         const usuariosPost= async(req, res= response) => {
         
           
 
-          const {nombre,correo,password,rol} = req.body;
+          const {nombre,correo,password,rol} = req.body;  
           const usuario= new Usuario ( { nombre,correo,password,rol});
 
           
