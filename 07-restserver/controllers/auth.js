@@ -12,13 +12,8 @@ const login = async (req, res = response) => {
     const { correo, password} = req.body;
 
     try {
-
-
       //Verificar si el email existe
-
       const usuario = await Usuario.findOne({ correo });
-
-
 
       if ( !usuario ) {
         return res.status(400).json ({
@@ -26,9 +21,7 @@ const login = async (req, res = response) => {
         })
       }
 
-
       // Si el usuario esta activo
-
       if ( !usuario.estado ) {
         return res.status(400).json ({
           msg: 'Usuario/ Password no son correctos - estado.false'
@@ -39,9 +32,9 @@ const login = async (req, res = response) => {
       const validPassword = bcryptjs.compareSync ( password, usuario.password );
       if (!validPassword){
         return res.status(400).json ({
-          msg: 'Usuario/ Password no son correctos - password'
-      });
-    }
+            msg: 'Usuario/ Password no son correctos - password'
+        });
+      }
 
 
       //Generar el JWT
@@ -52,8 +45,7 @@ const login = async (req, res = response) => {
 
       res.json({
         usuario,
-        token
-        
+        token        
       })
 
     }catch (error) {
@@ -86,8 +78,8 @@ const googleSingIn = async( req, res = response) => {
               correo,
               password: ':P',
               img,
-              google: true
-
+              google: true,
+              rol: 'USER_ROLE'
             };
             usuario = new Usuario ( data );
             await usuario.save();
@@ -110,7 +102,8 @@ const googleSingIn = async( req, res = response) => {
       });
 
     } catch ( error) {
-        json.status(500).json ({
+      console.log('cintia error: ', error);
+        res.status(500).json ({
           ok: false,
           msg: 'El token no se pudo verificar'
         })
