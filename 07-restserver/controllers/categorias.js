@@ -3,6 +3,8 @@ const { Categoria }= require ('../models');
 const { findById } = require('../models/categoria');
 
 
+
+
 // obtenerCategorias - paginado - total - populate
 
 const obtenerCategorias = async(req, res = response ) => {
@@ -16,8 +18,7 @@ const obtenerCategorias = async(req, res = response ) => {
   const [total,categorias] = await Promise.all([
 
     Categoria.count(query),
-
-    Categoria.find ({ query })
+    Categoria.find (query)
     .populate('usuario', 'nombre')
   .skip( Number( desde ))
   .limit(Number(limite))
@@ -69,9 +70,31 @@ const crearCategoria = async(req, res = response) => {
 
 }
 
-// actualizarCategoria
+ const actualizarCategoria = async ( req, res = response ) => {
 
-// borrarCategoria - estado:false
+  const { id } = req.params;
+  const { estado, usuario, ...data } = req.body;
+
+  data.nombre = data.nombre.toUpperCase();
+  data.usuario= req.usuario._id;
+
+
+  const categoria = await Categoria.findByIdAndUpdate(id, data, { new: true});
+
+  res.json( categoria );
+
+
+ }
+
+const borrarCategoria = async(req, res =response) => {
+
+  const { id } = req.params;
+  const categoriaBorrada = await Categoria.findByIdAndUpdate( id, { estado: false },  {new: true });
+res.json( categoriaBorrada);
+
+}
+
+
 
 
 
@@ -79,5 +102,7 @@ const crearCategoria = async(req, res = response) => {
 module.exports = {
   crearCategoria,
   obtenerCategorias,
-  obtenerCategoria
+  obtenerCategoria,
+  actualizarCategoria,
+  borrarCategoria
 }
